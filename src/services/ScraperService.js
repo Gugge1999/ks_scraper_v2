@@ -22,7 +22,7 @@ module.exports = {
 
     const date = $('.u-dt').attr('data-date-string');
 
-    let emailText = `${watchName}. Upplagd: ${date}.`;
-    return emailText;
+    let watch = `${watchName} ${date}`;
+    return watch;
   },
 };

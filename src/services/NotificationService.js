@@ -13,15 +13,13 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-console.log('user: ' + config.email.user + ' Password: ' + config.email.pass);
-
 module.exports = {
-  async sendKernelNotification(watch) {
+  async sendKernelNotification(emailText) {
     await transporter.sendMail({
       from: process.env.EMAIL,
       to: process.env.EMAILTO,
       subject: `Ny klocka tillgänglig`,
-      text: watch,
+      text: emailText,
     });
   },
   async sendErrorNotification(err) {

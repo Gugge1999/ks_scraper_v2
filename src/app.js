@@ -3,31 +3,49 @@
 const config = require('./config');
 const ScraperService = require('./services/ScraperService');
 const NotificationService = require('./services/NotificationService');
+const fs = require('fs');
 
-var latestWatch = '';
+var watchObj = {
+  watch: '',
+};
+
+function getTime() {
+  return new Date().toLocaleString();
+}
 
 async function run() {
   try {
-    const storedWatch = await ScraperService.getWatch();
-    console.log(`Current Watch: ${storedWatch}`);
+    watchObj.watch = await ScraperService.getWatch();
+    let formattedJSON = JSON.stringify(watchObj, null, 4);
+    console.log('Scraped: ' + formattedJSON);
 
-    if (latestWatch.length === 0) {
-      /* First start of the web scraper */
-      latestWatch = storedWatch;
-      console.log('Latest watch in if satement: ' + latestWatch);
-    } else if (latestWatch != storedWatch) {
-      // Watch changed. Send email to user.
-      latestWatch = storedWatch;
-      await NotificationService.sendKernelNotification(storedWatch);
-      console.log('Email sent' + new Date(Date.now()));
+    var storedWatch = fs.readFileSync('output.json', 'utf8');
+    console.log(`Data stored: ${storedWatch}`);
+
+    if (storedWatch != formattedJSON) {
+      let emailText = `${watchObj.watch}. Detta mail mail skickades: ${getTime()}`;
+      await NotificationService.sendKernelNotification(emailText);
+
+      fs.writeFile('output.json', JSON.stringify(watchObj, null, 4), function (err) {
+        if (err) {
+          throw err;
+        }
+        console.log('Wrote to output.json successfully');
+      });
+
+      // Email logging
+      fs.appendFile('email_logs.txt', `Email sent: ${getTime()}\nWatch name & date: ${watchObj.watch}\n\n`, function (err) {
+        if (err) throw err;
+        console.log('Wrote successfully to email_logs.txt');
+      });
+
+      console.log('Email sent ' + getTime());
     }
-    /* Recall function after milliseconds */
-    //console.log('Next check: ', new Date(Date.now() + config.interval).toString());
     setTimeout(run, config.interval);
   } catch (err) {
     // Exit application if something went wrong
     try {
-      await NotificationService.sendErrorNotification(err);
+      //await NotificationService.sendErrorNotification(err);
     } catch (err) {
       console.error('Sending error notification failed!');
     }
