@@ -5,7 +5,7 @@ const ScraperService = require('./services/ScraperService');
 const NotificationService = require('./services/NotificationService');
 const fs = require('fs');
 
-var watchObj = {
+let watchObj = {
   watch: '',
 };
 
@@ -17,15 +17,16 @@ async function run() {
   try {
     watchObj.watch = await ScraperService.getWatch();
     let formattedJSON = JSON.stringify(watchObj, null, 4);
-    console.log('Scraped: ' + formattedJSON);
+    console.log(`Scraped: ${formattedJSON}`);
 
-    var storedWatch = fs.readFileSync('output.json', 'utf8');
+    let storedWatch = fs.readFileSync('output.json', 'utf8');
     console.log(`Data stored: ${storedWatch}`);
 
     if (storedWatch != formattedJSON) {
       let emailText = `${watchObj.watch}. Detta mail mail skickades: ${getTime()}`;
       await NotificationService.sendKernelNotification(emailText);
 
+      // Write to output file
       fs.writeFile('output.json', JSON.stringify(watchObj, null, 4), function (err) {
         if (err) {
           throw err;
@@ -39,13 +40,13 @@ async function run() {
         console.log('Wrote successfully to email_logs.txt');
       });
 
-      console.log('Email sent ' + getTime());
+      console.log(`Email sent ${getTime()}`);
     }
     setTimeout(run, config.interval);
   } catch (err) {
     // Exit application if something went wrong
     try {
-      //await NotificationService.sendErrorNotification(err);
+      await NotificationService.sendErrorNotification(err);
     } catch (err) {
       console.error('Sending error notification failed!');
     }
