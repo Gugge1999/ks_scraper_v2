@@ -22,7 +22,9 @@ module.exports = {
 
     const date = $('.u-dt').attr('data-date-string');
 
-    let watch = `${watchName} ${date}`;
+    const watchLink = $('.contentRow-title').children().first().attr('href');
+
+    let watch = `${watchName} ${date} https://klocksnack.se${watchLink}`;
     return watch;
   },
 };
