@@ -19,19 +19,20 @@ async function run() {
     let formattedJSON = JSON.stringify(watchObj, null, 4);
     console.log(`Scraped: ${formattedJSON}`);
 
-    let storedWatch = fs.readFileSync('output.json', 'utf8');
+    let storedWatch = fs.readFileSync('stored_watch.json', 'utf8');
     console.log(`Data stored: ${storedWatch}`);
 
     if (storedWatch != formattedJSON) {
       let emailText = `${watchObj.watch}. Detta mail mail skickades: ${getTime()}`;
       await NotificationService.sendKernelNotification(emailText);
+      console.log(`Email sent ${getTime()}`);
 
-      // Write to output file
-      fs.writeFile('output.json', JSON.stringify(watchObj, null, 4), function (err) {
+      // Write to stored watch file
+      fs.writeFile('stored_watch.json', JSON.stringify(watchObj, null, 4), function (err) {
         if (err) {
           throw err;
         }
-        console.log('Wrote to output.json successfully');
+        console.log('Wrote to stored_watch.json successfully');
       });
 
       // Email logging
@@ -39,8 +40,6 @@ async function run() {
         if (err) throw err;
         console.log('Wrote successfully to email_logs.txt');
       });
-
-      console.log(`Email sent ${getTime()}`);
     }
     setTimeout(run, config.interval);
   } catch (err) {

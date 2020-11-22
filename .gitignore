@@ -1,4 +1,4 @@
 node_modules
 .env
-output.json
+stored_watch.json
 email_logs.txt

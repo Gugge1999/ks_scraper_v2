@@ -16,7 +16,7 @@ module.exports = {
       .children()
       .first()
       .text()
-      .replace(/Tillbakadragen|Avslutad|Säljes|Bytes|\//gi, '') // Remove sale status of the watch
+      .replace(/Tillbakadragen|Avslutad|Säljes|OHPF|Bytes|\//gi, '') // Remove sale status of the watch
       .trim();
     if (watchName === '') throw new Error('Watch name not found');
 
