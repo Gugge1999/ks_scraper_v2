@@ -18,7 +18,7 @@ module.exports = {
     await transporter.sendMail({
       from: process.env.EMAIL,
       to: process.env.EMAILTO,
-      subject: `Ny klocka tillgänglig`,
+      subject: `Ny klocka tillgänglig! ⌚`,
       text: emailText,
     });
   },

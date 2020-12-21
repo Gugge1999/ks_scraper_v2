@@ -24,7 +24,7 @@ module.exports = {
 
     const watchLink = $('.contentRow-title').children().first().attr('href');
 
-    let watch = `${watchName} ${date} https://klocksnack.se${watchLink}`;
-    return watch;
+    let watchInfo = `${watchName} ${date} https://klocksnack.se${watchLink}`;
+    return watchInfo;
   },
 };

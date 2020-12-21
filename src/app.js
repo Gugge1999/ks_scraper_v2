@@ -23,7 +23,7 @@ async function run() {
     console.log(`Data stored: ${storedWatch}`);
 
     if (storedWatch != formattedJSON) {
-      let emailText = `${watchObj.watch}. Detta mail mail skickades: ${getTime()}`;
+      let emailText = `${watchObj.watch}\n\nDetta mail mail skickades: ${getTime()}`;
       await NotificationService.sendKernelNotification(emailText);
       console.log(`Email sent ${getTime()}`);
 
