@@ -1,4 +1,3 @@
-// src/app.js
 'use strict';
 const config = require('./config');
 const ScraperService = require('./services/ScraperService');
