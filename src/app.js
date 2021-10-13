@@ -15,13 +15,17 @@ function getTime() {
 async function run() {
   try {
     watchObj.watch = await ScraperService.getWatch();
-    let formattedJSON = JSON.stringify(watchObj, null, 4);
-    console.log(`Scraped: ${formattedJSON}`);
-
+    let scrapedWatch = JSON.stringify(watchObj, null, 4);
     let storedWatch = fs.readFileSync('stored_watch.json', 'utf8');
-    console.log(`Data stored: ${storedWatch}`);
+    const line = '-'.repeat(process.stdout.columns);
 
-    if (storedWatch != formattedJSON) {
+    console.log(`\x1b[36m${line}\x1b[0m`);
+    console.log(`\x1b[32mTime: ${getTime()}\x1b[0m`);
+    console.log(`Scraped: ${scrapedWatch}`);
+    console.log(`Data stored: ${storedWatch}`);
+    console.log(`\x1b[36m${line}\x1b[0m\n`);
+
+    if (storedWatch != scrapedWatch) {
       let emailText = `${watchObj.watch}\n\nDetta mail mail skickades: ${getTime()}`;
       await NotificationService.sendKernelNotification(emailText);
       console.log(`Email sent ${getTime()}`);
