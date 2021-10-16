@@ -17,13 +17,19 @@ async function run() {
     watchObj.watch = await ScraperService.getWatch();
     let scrapedWatch = JSON.stringify(watchObj, null, 4);
     let storedWatch = fs.readFileSync('stored_watch.json', 'utf8');
-    const line = '-'.repeat(process.stdout.columns);
+    const colors = {
+      blue: '\x1b[36m',
+      yellow: '\x1b[33m',
+      green: '\x1b[32m',
+      white: '\x1b[0m',
+    };
+    const line = colors.blue + '-'.repeat(process.stdout.columns) + colors.white;
 
-    console.log(`\x1b[36m${line}\x1b[0m`);
-    console.log(`\x1b[32mTime: ${getTime()}\x1b[0m`);
-    console.log(`Scraped: ${scrapedWatch}`);
-    console.log(`Data stored: ${storedWatch}`);
-    console.log(`\x1b[36m${line}\x1b[0m\n`);
+    console.log(line);
+    console.log(`${colors.green}Time: ${getTime()}${colors.white}`);
+    console.log(`${colors.yellow}Scraped${colors.white}: ${scrapedWatch}`);
+    console.log(`${colors.yellow}Data stored${colors.white}: ${storedWatch}`);
+    console.log(`${line}\n`);
 
     if (storedWatch != scrapedWatch) {
       let emailText = `${watchObj.watch}\n\nDetta mail mail skickades: ${getTime()}`;
