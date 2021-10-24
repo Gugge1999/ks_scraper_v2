@@ -12,6 +12,12 @@ function getTime() {
   return new Date().toLocaleString();
 }
 
+function getDateAndTimeWithMilliseconds() {
+  var tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
+  var localISOTime = new Date(Date.now() - tzoffset).toISOString().slice(0, -1);
+  return localISOTime;
+}
+
 async function run() {
   try {
     watchObj.watch = await ScraperService.getWatch();
@@ -32,15 +38,14 @@ async function run() {
     console.log(`${line}\n`);
 
     if (storedWatch != scrapedWatch) {
-      let emailText = `${watchObj.watch}\n\nDetta mail mail skickades: ${getTime()}`;
+      let emailText = `${watchObj.watch}\n\nDetta mail skickades: ${getTime()}`;
       await NotificationService.sendKernelNotification(emailText);
+      console.log(`Time with milliseconds after NotificationService.sendErrorNotification(): ${getDateAndTimeWithMilliseconds()}`);
       console.log(`Email sent ${getTime()}`);
 
       // Write to stored watch file
       fs.writeFile('stored_watch.json', JSON.stringify(watchObj, null, 4), function (err) {
-        if (err) {
-          throw err;
-        }
+        if (err) throw err;
         console.log('Wrote to stored_watch.json successfully');
       });
 
